@@ -11,13 +11,19 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { email } = createUserDto;
-    const existUser = await this.findOne(email);
-    if (existUser) {
-      throw new HttpException('email exits', HttpStatus.BAD_REQUEST);
-    }
+    return await this.userModel
+      .findOne({ email })
+      .then((user) => {
+        if (user) {
+          throw new HttpException('email exits', HttpStatus.BAD_REQUEST);
+        }
 
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+        const createdUser = new this.userModel(createUserDto);
+        return createdUser.save();
+      })
+      .catch(() => {
+        throw new HttpException('email exits', HttpStatus.BAD_REQUEST);
+      });
   }
 
   async findAll(): Promise<User[]> {
