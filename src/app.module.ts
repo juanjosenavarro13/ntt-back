@@ -7,13 +7,13 @@ import { join } from 'path/posix';
 
 @Module({
   imports: [
-    UsersModule,
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URI),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'swagger-static'),
       serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
     }),
+    UsersModule,
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
   ],
   controllers: [],
   providers: [],
